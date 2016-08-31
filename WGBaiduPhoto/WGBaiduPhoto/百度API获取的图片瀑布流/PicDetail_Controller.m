@@ -74,12 +74,23 @@
     NSDictionary *dic = @{
                           @"id":_theID
                           };
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:url parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    [manager GET:url parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        if ([responseObject[@"status"] boolValue]) {
+//            [self showPic:responseObject];
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        //
+//    }];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:url parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+        //
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject[@"status"] boolValue]) {
             [self showPic:responseObject];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //
     }];
 }

@@ -38,21 +38,41 @@
 - (void)loadData
 {
     NSString *url = @"http://www.tngou.net/tnfs/api/classify";
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        if ([responseObject[@"status"] boolValue]) {
+//
+//            dataArray = [NSMutableArray array];
+//
+//            for (id obj in responseObject[@"tngou"]) {
+//                ListModel *model = [ListModel new];
+//                [model setValuesForKeysWithDictionary:obj];
+//                [dataArray addObject:model];
+//            }
+//
+//            [self createTB];
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        //
+//    }];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:url parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+        //
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject[@"status"] boolValue]) {
-
+            
             dataArray = [NSMutableArray array];
-
+            
             for (id obj in responseObject[@"tngou"]) {
                 ListModel *model = [ListModel new];
                 [model setValuesForKeysWithDictionary:obj];
                 [dataArray addObject:model];
             }
-
+            
             [self createTB];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //
     }];
 }

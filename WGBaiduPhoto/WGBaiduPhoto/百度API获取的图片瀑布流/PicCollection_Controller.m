@@ -12,10 +12,9 @@
 #import "ShowPic_Cell.h"
 #import "HMWaterflowLayout.h"
 #import "MJRefresh.h"
-#import "SDPhotoBrowser.h"
 #import "PicDetail_Controller.h"
 
-@interface PicCollection_Controller () <UICollectionViewDataSource,UICollectionViewDelegate,HMWaterflowLayoutDelegate,SDPhotoBrowserDelegate>
+@interface PicCollection_Controller () <UICollectionViewDataSource,UICollectionViewDelegate,HMWaterflowLayoutDelegate>
 {
     int page;
     NSMutableArray *dataArray;
@@ -47,10 +46,46 @@
                           @"rows":@(20),
                           @"id":_picID
                           };
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager GET:url parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    [manager GET:url parameters:dic success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        if ([responseObject[@"status"] boolValue]) {
+//
+//            if (!dataArray) {
+//                dataArray = [NSMutableArray array];
+//                heightArray = [NSMutableArray array];
+//            }else
+//            {
+//                if (page == 1) {
+//                    [dataArray removeAllObjects];
+//                    [heightArray removeAllObjects];
+//                }
+//            }
+//
+//            for (id obj in responseObject[@"tngou"]) {
+//                PicModel *model = [PicModel new];
+//                [model setValuesForKeysWithDictionary:obj];
+//                [dataArray addObject:model];
+//
+//                NSNumber *num = [NSNumber numberWithInt:arc4random_uniform(2)==0?250:300];
+//                [heightArray addObject:num];
+//            }
+//
+//            if (collect) {
+//                [collect reloadData];
+//            }else
+//                [self createCollection];
+//
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        //
+//    }];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:url parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+        //
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject[@"status"] boolValue]) {
-
+            
             if (!dataArray) {
                 dataArray = [NSMutableArray array];
                 heightArray = [NSMutableArray array];
@@ -61,23 +96,23 @@
                     [heightArray removeAllObjects];
                 }
             }
-
+            
             for (id obj in responseObject[@"tngou"]) {
                 PicModel *model = [PicModel new];
                 [model setValuesForKeysWithDictionary:obj];
                 [dataArray addObject:model];
-
+                
                 NSNumber *num = [NSNumber numberWithInt:arc4random_uniform(2)==0?250:300];
                 [heightArray addObject:num];
             }
-
+            
             if (collect) {
                 [collect reloadData];
             }else
                 [self createCollection];
-
+            
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //
     }];
 }
